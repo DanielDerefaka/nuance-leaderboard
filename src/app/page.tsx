@@ -28,21 +28,26 @@ export default function Home() {
         return (
           miner.node_hotkey?.toLowerCase().includes(query)
         );
-      }).map(scoreData => ({
-        ...scoreData,
-        uid: 0, // Will be populated from actual miner data
-        handle: 'Unknown',
-        hotkey: scoreData.node_hotkey,
-        rank: 0,
-        username: 'Unknown',
-        total_posts: 0,
-        total_interactions: 0,
-        avg_score: scoreData.score,
-        last_active: new Date().toISOString(),
-        retweet_count: 0,
-        reply_count: 0,
-        node_hotkey: scoreData.node_hotkey,
-      }))
+      }).map((scoreData, index) => {
+        // Try to find matching miner data from topMiners for better display info
+        const matchingMiner = topMiners?.find(tm => tm.hotkey === scoreData.node_hotkey);
+        
+        return {
+          ...scoreData,
+          uid: matchingMiner?.uid || 0,
+          handle: matchingMiner?.handle || scoreData.node_hotkey.slice(0, 8),
+          hotkey: scoreData.node_hotkey,
+          rank: index + 1,
+          username: matchingMiner?.username || scoreData.node_hotkey.slice(0, 8),
+          total_posts: matchingMiner?.total_posts || 0,
+          total_interactions: matchingMiner?.total_interactions || 0,
+          avg_score: scoreData.score,
+          last_active: matchingMiner?.last_active || new Date().toISOString(),
+          retweet_count: matchingMiner?.retweet_count || 0,
+          reply_count: matchingMiner?.reply_count || 0,
+          node_hotkey: scoreData.node_hotkey,
+        };
+      })
     : topMiners || [];
 
   const isMinersLoading = searchQuery ? isAllMinersLoading : isTopMinersLoading;
@@ -69,9 +74,18 @@ export default function Home() {
       <main className="container mx-auto px-6 py-8 space-y-12">
         {/* Hero Section */}
         <section id="dashboard" className="text-center py-12">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            Nuance Network Tracker
-          </h1>
+          <div className="flex items-center justify-center mb-6">
+            <div className="h-16 w-16 bg-white rounded-full flex items-center justify-center p-3 mr-4">
+              <img 
+                src="/headIcon-B2sizE47.svg" 
+                alt="Nuance Network Logo" 
+                className="h-full w-full object-contain"
+              />
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold">
+              Nuance Network Tracker
+            </h1>
+          </div>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Monitor quality content scores, view leaderboards, and track performance analytics 
             for Bittensor subnet 23 - the Nuance Network.
@@ -135,7 +149,7 @@ export default function Home() {
             )}
             {!searchQuery && allMinerScores && (
               <p className="text-xs text-gray-500 mt-2 text-center">
-                Search through all {allMinerScores.miner_scores.length} miners by hotkey
+                Search through all {allMinerScores.miner_scores.length} scored miners by hotkey
               </p>
             )}
           </div>

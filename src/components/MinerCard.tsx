@@ -40,9 +40,23 @@ export function MinerCard({ miner, onViewProfile }: MinerCardProps) {
             <p className="font-medium text-white group-hover:text-gray-200">
               {miner.username || miner.handle || 'Anonymous Miner'}
             </p>
-            <p className="text-xs text-gray-500 font-mono">
-              {formatHotkey(miner.hotkey || miner.node_hotkey)}
-            </p>
+            <div className="flex items-center space-x-1">
+              <p className="text-xs text-gray-500 font-mono">
+                {formatHotkey(miner.hotkey || miner.node_hotkey)}
+              </p>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigator.clipboard.writeText(miner.hotkey || miner.node_hotkey);
+                }}
+                className="text-gray-500 hover:text-white transition-colors p-0.5 rounded hover:bg-gray-800"
+                title="Copy hotkey"
+              >
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
         

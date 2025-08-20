@@ -11,6 +11,17 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Nuance Tracker - Bittensor Subnet 23 Leaderboard",
   description: "Track quality content scores and performance analytics for the Nuance Network (Bittensor subnet 23)",
+  icons: {
+    icon: [
+      {
+        url: '/headIcon-B2sizE47.svg',
+        sizes: '46x50',
+        type: 'image/svg+xml',
+      },
+    ],
+    shortcut: '/headIcon-B2sizE47.svg',
+    apple: '/headIcon-B2sizE47.svg',
+  },
 };
 
 export default function RootLayout({
